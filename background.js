@@ -1,6 +1,6 @@
 import { config } from "./config.js";
 
-const API_URL = "https://concentria-fh4s.onrender.com/api/logs";
+const API_URL = "https://concentria-backend.onrender.com/api/logs";
 
 // Function to send log to backend with authentication
 async function sendLogToBackend(log) {
@@ -9,7 +9,7 @@ async function sendLogToBackend(log) {
     const result = await new Promise((resolve) => {
       chrome.storage.local.get(
         ["authToken", "userEmail", "isLoggedIn"],
-        resolve
+        resolve,
       );
     });
 
@@ -52,7 +52,7 @@ async function sendLogToBackend(log) {
     } else {
       console.error(
         "[background] Failed to send log to backend:",
-        response.status
+        response.status,
       );
       const errorText = await response.text();
       console.error("[background] Error details:", errorText);

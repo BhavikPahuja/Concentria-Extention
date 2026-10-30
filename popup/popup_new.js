@@ -146,14 +146,14 @@ async function login(email, password) {
     console.log("Sending login request...");
 
     const response = await fetch(
-      "https://concentria-fh4s.onrender.com/auth/login",
+      "https://concentria-backend.onrender.com/auth/login",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-      }
+      },
     );
 
     console.log("Login response status:", response.status);
@@ -309,7 +309,7 @@ async function fetchUserLogs() {
     const result = await new Promise((resolve) => {
       chrome.storage.local.get(
         ["authToken", "userEmail", "isLoggedIn", "logs"],
-        resolve
+        resolve,
       );
     });
 
@@ -321,8 +321,8 @@ async function fetchUserLogs() {
       try {
         console.log("Fetching logs for user:", userEmail);
 
-        const url = `https://concentria-fh4s.onrender.com/api/logs?userEmail=${encodeURIComponent(
-          userEmail
+        const url = `https://concentria-backend.onrender.com/api/logs?userEmail=${encodeURIComponent(
+          userEmail,
         )}`;
 
         const response = await fetch(url, {
@@ -349,7 +349,7 @@ async function fetchUserLogs() {
           console.log(
             `Merged ${localLogs?.length || 0} local + ${
               backendLogs.length
-            } backend logs = ${allLogs.length} total`
+            } backend logs = ${allLogs.length} total`,
           );
 
           // Cache merged logs
@@ -395,14 +395,14 @@ function mergeAndDedupeLogs(localLogs, backendLogs) {
         (l) =>
           l.timestamp === log.timestamp &&
           l.type === log.type &&
-          l.url === log.url
+          l.url === log.url,
       )
     );
   });
 
   // Sort by timestamp (newest first)
   return uniqueLogs.sort(
-    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
   );
 }
 
@@ -421,7 +421,7 @@ function updateStats(logs = null) {
   // Calculate today's logs
   const today = new Date().toDateString();
   const todayLogs = logs.filter(
-    (log) => new Date(log.timestamp).toDateString() === today
+    (log) => new Date(log.timestamp).toDateString() === today,
   ).length;
 
   const totalElement = document.getElementById("totalLogs");
@@ -520,7 +520,7 @@ function renderLogs(logs = null) {
   });
 
   console.log(
-    `Rendered ${logs.length} logs in ${Object.keys(groupedLogs).length} groups`
+    `Rendered ${logs.length} logs in ${Object.keys(groupedLogs).length} groups`,
   );
 }
 
@@ -710,7 +710,7 @@ async function downloadLogsHandler() {
 async function clearLogsHandler() {
   if (
     !confirm(
-      "Are you sure you want to clear all logs? This action cannot be undone."
+      "Are you sure you want to clear all logs? This action cannot be undone.",
     )
   ) {
     return;
@@ -747,7 +747,9 @@ function clearLogs() {
 }
 
 function openDashboardHandler() {
-  chrome.tabs.create({ url: "https://concentria-fh4s.onrender.com/dashboard" });
+  chrome.tabs.create({
+    url: "https://concentria-backend.onrender.com/dashboard",
+  });
 }
 
 async function downloadCookiesHandler() {
@@ -786,7 +788,7 @@ async function downloadCookiesHandler() {
 async function deleteAllCookiesHandler() {
   if (
     !confirm(
-      "Are you sure you want to delete all cookies for this site? This may log you out of the website."
+      "Are you sure you want to delete all cookies for this site? This may log you out of the website.",
     )
   ) {
     return;
@@ -882,7 +884,7 @@ function showNotification(message, type = "info") {
 
 function clearError() {
   const existingNotifications = document.querySelectorAll(
-    ".notification-error"
+    ".notification-error",
   );
   existingNotifications.forEach((n) => n.remove());
 }
